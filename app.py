@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -162,16 +161,11 @@ def faq_borrar(bot_id, faq_id):
     flash("FAQ borrada correctamente.", "danger")
     return redirect(url_for("faqs", bot_id=bot_id))
 
-with app.app_context():
-   # db.create_all() ← comenta esta línea si ya la tienes
-
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
 @app.route("/init-db")
 def init_db():
     db.create_all()
     return "✅ Base de datos inicializada correctamente."
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
