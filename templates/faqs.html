@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>FAQs de {{ bot.nombre }}</h2>
+
+  <a href="{{ url_for('faq_nuevo', bot_id=bot.id) }}" class="btn btn-primary mb-3">
+    Nueva Pregunta
+  </a>
+
+  {% if faqs %}
+    <ul class="list-group">
+      {% for faq in faqs %}
+        <li class="list-group-item">
+          <strong>{{ faq.pregunta }}</strong><br>
+          {{ faq.respuesta }}
+          <div class="mt-2">
+            <a href="{{ url_for('faq_editar', bot_id=bot.id, faq_id=faq.id) }}" class="btn btn-sm btn-warning">Editar</a>
+            <form method="POST" action="{{ url_for('faq_borrar', bot_id=bot.id, faq_id=faq.id) }}" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger">Borrar</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay preguntas aún.</p>
+  {% endif %}
+{% endblock %}
