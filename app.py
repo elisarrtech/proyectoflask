@@ -170,3 +170,8 @@ with app.app_context():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
 
+@app.route("/init-db")
+def init_db():
+    db.create_all()
+    return "✅ Base de datos inicializada correctamente."
+
