@@ -163,7 +163,9 @@ def faq_borrar(bot_id, faq_id):
     return redirect(url_for("faqs", bot_id=bot_id))
 
 with app.app_context():
-    db.create_all()
+   # db.create_all() ← comenta esta línea si ya la tienes
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
