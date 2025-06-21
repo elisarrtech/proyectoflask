@@ -159,6 +159,21 @@ def faq_borrar(bot_id, faq_id):
     flash("FAQ borrada correctamente.", "danger")
     return redirect(url_for("faqs", bot_id=bot_id))
 
+@app.route("/chatbot/<int:bot_id>", methods=["GET", "POST"])
+def ver_chatbot(bot_id):
+    bot = Chatbot.query.get_or_404(bot_id)
+    respuesta = None
+    if request.method == "POST":
+        pregunta_usuario = request.form["pregunta"].strip().lower()
+        for faq in bot.faqs:
+            if faq.pregunta.strip().lower() == pregunta_usuario:
+                respuesta = faq.respuesta
+                break
+        if not respuesta:
+            respuesta = bot.respuesta_predeterminada or "Lo siento, no tengo una respuesta para eso."
+    return render_template("chatbot.html", bot=bot, respuesta=respuesta)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
 
