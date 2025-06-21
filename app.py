@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -50,6 +51,7 @@ def login():
         password = request.form["password"]
         if username == "admin" and password == "1234":
             session["logged_in"] = True
+            session["welcome"] = True
             flash("Bienvenido, acceso concedido.", "success")
             return redirect(url_for("dashboard"))
         else:
