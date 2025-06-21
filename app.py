@@ -5,8 +5,7 @@ import os
 app = Flask(__name__)
 app.secret_key = "tu_clave_secreta_aqui"
 
-# Configurar base de datos
-basedir = os.path.abspath(os.path.dirname(__file__))
+# Usar la base de datos definida en Render
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -29,7 +28,7 @@ class FAQ(db.Model):
     respuesta = db.Column(db.String(500))
     chatbot_id = db.Column(db.Integer, db.ForeignKey('chatbot.id'), nullable=False)
 
-# Decorador para rutas protegidas
+# Login decorador
 def login_required(f):
     from functools import wraps
     @wraps(f)
@@ -118,7 +117,6 @@ def borrar():
         flash(f"Chatbot con ID {bot_id} borrado correctamente.", "danger")
     return redirect(url_for("dashboard"))
 
-# FAQ management
 @app.route("/faqs/<int:bot_id>")
 @login_required
 def faqs(bot_id):
