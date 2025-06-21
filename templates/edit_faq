@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Editar FAQ para "{{ bot.nombre }}"</h2>
+
+<form method="POST">
+  <div class="mb-3">
+    <label for="pregunta" class="form-label">Pregunta</label>
+    <input type="text" class="form-control" id="pregunta" name="pregunta" value="{{ faq.pregunta }}" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="respuesta" class="form-label">Respuesta</label>
+    <textarea class="form-control" id="respuesta" name="respuesta" rows="4" required>{{ faq.respuesta }}</textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Actualizar FAQ</button>
+  <a href="{{ url_for('faqs', bot_id=bot.id) }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
