@@ -18,7 +18,7 @@
             <p class="card-text">{{ bot.descripcion }}</p>
             <p class="text-muted small">Idioma: {{ bot.idioma }}</p>
             <p class="text-muted small">
-              Estado: 
+              Estado:
               <span class="badge bg-{{ 'success' if bot.activo else 'secondary' }}">
                 {{ 'Activo' if bot.activo else 'Inactivo' }}
               </span>
@@ -32,6 +32,9 @@
             <a href="{{ url_for('ver_chatbot', bot_id=bot.id) }}" class="btn btn-sm btn-outline-info" target="_blank">
               <i class="bi bi-box-arrow-up-right"></i> Compartir
             </a>
+            <button class="btn btn-sm btn-outline-secondary" onclick="copiarEnlace('{{ request.host_url }}chatbot/{{ bot.id }}')">
+              <i class="bi bi-clipboard"></i> Copiar Enlace
+            </button>
             <form action="{{ url_for('borrar') }}" method="POST" class="d-inline">
               <input type="hidden" name="bot_id" value="{{ bot.id }}">
               <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar este chatbot?')">
@@ -49,5 +52,14 @@
   </div>
 {% endif %}
 
-{% endblock %}
+<script>
+function copiarEnlace(url) {
+  navigator.clipboard.writeText(url).then(function() {
+    alert('Enlace copiado: ' + url);
+  }, function(err) {
+    alert('Error al copiar: ' + err);
+  });
+}
+</script>
 
+{% endblock %}
