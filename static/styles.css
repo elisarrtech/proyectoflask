@@ -88,6 +88,10 @@ table {
   background-color: #0b5ed7;
   border-color: #0a58ca;
 }
+ /*Formulario como descripción o respuesta*/
+textarea.form-control {
+  min-height: 100px;
+}
 
 
 /* Modal */
@@ -108,4 +112,14 @@ table {
     text-align: center;
   }
 }
+
+footer {
+  padding: 1rem;
+  background-color: #e9ecef;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6c757d;
+  border-top: 1px solid #dee2e6;
+}
+
 
