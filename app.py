@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -29,17 +29,47 @@ class FAQ(db.Model):
     respuesta = db.Column(db.String(500))
     chatbot_id = db.Column(db.Integer, db.ForeignKey('chatbot.id'), nullable=False)
 
-# Rutas
+# Decorador para rutas protegidas
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route("/")
 def index():
     return redirect(url_for("dashboard"))
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if username == "admin" and password == "1234":
+            session["logged_in"] = True
+            flash("Bienvenido, acceso concedido.", "success")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Credenciales incorrectas", "danger")
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Sesión cerrada.", "info")
+    return redirect(url_for("login"))
+
 @app.route("/dashboard")
+@login_required
 def dashboard():
     chatbots = Chatbot.query.all()
     return render_template("dashboard.html", chatbots=chatbots)
 
 @app.route("/nuevo", methods=["GET", "POST"])
+@login_required
 def nuevo():
     if request.method == "POST":
         nombre = request.form["nombre"]
@@ -62,6 +92,7 @@ def nuevo():
     return render_template("new_bot.html")
 
 @app.route("/editar/<int:bot_id>", methods=["GET", "POST"])
+@login_required
 def editar(bot_id):
     bot = Chatbot.query.get_or_404(bot_id)
     if request.method == "POST":
@@ -76,6 +107,7 @@ def editar(bot_id):
     return render_template("edit_bot.html", bot=bot)
 
 @app.route("/borrar", methods=["POST"])
+@login_required
 def borrar():
     bot_id = int(request.form.get("bot_id"))
     bot = Chatbot.query.get(bot_id)
@@ -87,11 +119,13 @@ def borrar():
 
 # FAQ management
 @app.route("/faqs/<int:bot_id>")
+@login_required
 def faqs(bot_id):
     bot = Chatbot.query.get_or_404(bot_id)
     return render_template("faqs.html", bot=bot, faqs=bot.faqs)
 
 @app.route("/faqs/<int:bot_id>/nuevo", methods=["GET", "POST"])
+@login_required
 def faq_nuevo(bot_id):
     bot = Chatbot.query.get_or_404(bot_id)
     if request.method == "POST":
@@ -105,6 +139,7 @@ def faq_nuevo(bot_id):
     return render_template("new_faq.html", bot=bot)
 
 @app.route("/faqs/<int:bot_id>/editar/<int:faq_id>", methods=["GET", "POST"])
+@login_required
 def faq_editar(bot_id, faq_id):
     bot = Chatbot.query.get_or_404(bot_id)
     faq = FAQ.query.get_or_404(faq_id)
@@ -117,6 +152,7 @@ def faq_editar(bot_id, faq_id):
     return render_template("edit_faq.html", bot=bot, faq=faq)
 
 @app.route("/faqs/<int:bot_id>/borrar/<int:faq_id>", methods=["POST"])
+@login_required
 def faq_borrar(bot_id, faq_id):
     faq = FAQ.query.get_or_404(faq_id)
     db.session.delete(faq)
@@ -129,5 +165,4 @@ with app.app_context():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
 
