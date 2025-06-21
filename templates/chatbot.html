@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Chatbot: {{ bot.nombre }}</h2>
+
+  <form method="POST" class="mb-3">
+    <div class="input-group">
+      <input type="text" name="pregunta" class="form-control" placeholder="Escribe tu pregunta..." required>
+      <button class="btn btn-primary" type="submit">Enviar</button>
+    </div>
+  </form>
+
+  {% if respuesta %}
+    <div class="alert alert-info">
+      <strong>Respuesta:</strong> {{ respuesta }}
+    </div>
+  {% endif %}
+
+  <hr>
+  <p class="text-muted">Este chatbot responde con base en las preguntas frecuentes definidas por un administrador.</p>
+</div>
+{% endblock %}
