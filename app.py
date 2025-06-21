@@ -1,27 +1,40 @@
-
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 app = Flask(__name__)
+app.secret_key = "tu_clave_secreta_aqui"  # Cambia esto por algo seguro
 
-# Página de inicio (login falso por ahora)
+# Datos mock para ejemplo (reemplazar luego con base de datos real)
+chatbots = [
+    {"id": 1, "nombre": "Chatbot Ventas", "descripcion": "Responde dudas sobre productos y promociones."},
+    {"id": 2, "nombre": "Chatbot Soporte", "descripcion": "Ayuda con problemas técnicos y FAQs."}
+]
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Dashboard principal
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", chatbots=chatbots)
 
-# Crear un nuevo chatbot
 @app.route("/nuevo", methods=["GET", "POST"])
 def nuevo():
     if request.method == "POST":
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"]
-        # Aquí guardarás a base de datos más adelante
+        new_id = max(bot["id"] for bot in chatbots) + 1 if chatbots else 1
+        chatbots.append({"id": new_id, "nombre": nombre, "descripcion": descripcion})
+        flash(f'Chatbot "{nombre}" creado con éxito.', "success")
         return redirect(url_for("dashboard"))
     return render_template("new_bot.html")
+
+@app.route("/borrar", methods=["POST"])
+def borrar():
+    bot_id = int(request.form.get("bot_id"))
+    global chatbots
+    chatbots = [bot for bot in chatbots if bot["id"] != bot_id]
+    flash(f"Chatbot con ID {bot_id} borrado correctamente.", "danger")
+    return redirect(url_for("dashboard"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
