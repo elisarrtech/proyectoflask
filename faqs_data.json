@@ -1,0 +1,17 @@
+[
+  {
+    "bot_id": 1,
+    "pregunta": "¿Qué es una suma?",
+    "respuesta": "Es una operación matemática para juntar dos o más cantidades. Por ejemplo: 2 + 3 = 5."
+  },
+  {
+    "bot_id": 1,
+    "pregunta": "¿Qué es una resta?",
+    "respuesta": "Es una operación para conocer la diferencia entre dos cantidades. Por ejemplo: 5 - 2 = 3."
+  },
+  {
+    "bot_id": 1,
+    "pregunta": "¿Qué es una multiplicación?",
+    "respuesta": "Es una suma repetida. Por ejemplo: 3 x 2 = 6."
+  }
+]
